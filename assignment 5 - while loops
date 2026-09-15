@@ -1,0 +1,110 @@
+// Karel submission — do not remove the header or the function wrappers.
+// assignment: lesson-05
+//
+// Each problem below is wrapped in an outer function that returns its
+// main(k), so your instructor's grader can run and grade every one.
+
+// ──────────────────────────────────────────────────────────
+// Problem 1: simple (Simple)
+// ──────────────────────────────────────────────────────────
+function problem_1() {
+function main(k) {
+  while (k.frontIsClear()) { k.move(); }
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 2: moderate (Moderate)
+// ──────────────────────────────────────────────────────────
+function problem_2() {
+function main(k) {
+  while (k.frontIsClear()) {
+    k.pickBeeper();
+    k.move();
+  }     
+  k.pickBeeper();
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 3: complex (Complex)
+// ──────────────────────────────────────────────────────────
+function problem_3() {
+function pickPresent(k) {
+  while (k.beepersPresent()) { k.pickBeeper() }
+}
+function putPresent(k) {
+  while (k.beepersInBag()) { k.putBeeper() } 
+}
+function crossFloor(k) {
+  while (k.frontIsClear()) { k.move() }
+}
+function firstPass(k) {
+  pickPresent(k);
+  crossFloor(k);
+  putPresent(k)
+}
+function passFloor(k) {
+  k.turnLeft();
+  k.move();
+  k.turnLeft();
+  crossFloor(k);
+  k.turnLeft();
+  k.turnLeft();  
+  firstPass(k)
+}
+function main(k) {
+  firstPass(k);
+  for (let i=0;i<7;i++) { passFloor(k) }
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 4: complex2 (Complex II)
+// ──────────────────────────────────────────────────────────
+function problem_4() {
+function turnRight(k) {
+ k.turnLeft(); 
+ k.turnLeft();
+ k.turnLeft()
+}
+function moveAndPick(k) {
+  while (k.frontIsClear()) { 
+    k.move();
+    if (k.beepersPresent()) { k.pickBeeper() }
+  }
+}
+function firstPass(k) {
+  k.turnLeft();
+  while (k.frontIsClear()) { k.move() };
+  turnRight(k);  
+  moveAndPick(k);
+}
+function lastPass(k) {
+  k.turnLeft();
+  k.move();
+  k.turnLeft();
+  while (!k.cornerColorIs("Red")) { k.move(); }
+}
+function moveLeft(k) {
+  k.turnLeft();
+  while (k.frontIsClear()) { k.move() };
+  k.turnLeft();
+  moveAndPick(k)
+}
+function moveRight(k) {
+  turnRight(k);
+  while (k.frontIsClear()) { k.move() };
+  turnRight(k);
+  moveAndPick(k)
+}
+function main(k) {
+  firstPass(k);
+  for (let i=0;i<3;i++) { moveLeft(k); moveRight(k) };
+  lastPass(k);
+}
+  return main;
+}
