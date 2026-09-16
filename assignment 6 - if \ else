@@ -1,0 +1,145 @@
+// Karel submission — do not remove the header or the function wrappers.
+// assignment: lesson-06
+//
+// Each problem below is wrapped in an outer function that returns its
+// main(k), so your instructor's grader can run and grade every one.
+
+// ──────────────────────────────────────────────────────────
+// Problem 1: simple (Simple)
+// ──────────────────────────────────────────────────────────
+function problem_1() {
+function turnRight(k) {
+ k.turnLeft();
+ k.turnLeft();
+ k.turnLeft() 
+}
+function putOrPick(k) {
+  if (k.beepersPresent()) { k.pickBeeper() }
+  else { k.putBeeper() } 
+}
+function traverse(k) {
+  k.move();
+  k.move();
+  putOrPick(k)
+}
+function main(k) {
+  traverse(k);
+  turnRight(k);
+  traverse(k)
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 2: moderate (Moderate)
+// ──────────────────────────────────────────────────────────
+function problem_2() {
+function main(k) {
+  for (let i = 0; i < 13; i++) {
+    if (k.frontIsClear()) {
+     k.move();
+     k.putBeeper(); 
+    } else { k.turnLeft() }
+  }
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 3: complex (Complex)
+// ──────────────────────────────────────────────────────────
+function problem_3() {
+function turnRight(k) {
+ k.turnLeft(); 
+ k.turnLeft();
+ k.turnLeft();
+}
+function recolor(k) {
+  if (k.noBeepersPresent()) { k.paintCorner("Red") } else { k.paintCorner("Blue") }
+}
+function rotate(k) {
+    if (k.facingEast()) {
+    k.turnLeft();
+    k.move();
+    k.turnLeft()
+  } else {
+    turnRight(k);
+    k.move();
+    turnRight(k) 
+  } 
+  recolor(k);
+}
+function paintSquare(k) {
+  k.move();
+  recolor(k);
+}
+function paintFloor(k) {
+  for (let e=0;e<4;e++) { paintSquare(k); }
+}
+function main(k) {
+  recolor(k);
+  for (let i=0;i<3;i++) {
+   paintFloor(k)
+   rotate(k);
+   }
+  paintFloor(k)
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 4: advanced (Advanced)
+// ──────────────────────────────────────────────────────────
+function problem_4() {
+function turnRight(k) {
+  k.turnLeft();
+  k.turnLeft();
+  k.turnLeft()
+}
+
+function rotate(k) {
+  if (k.facingEast()) { 
+    k.turnLeft(); 
+    k.move(); 
+    k.turnLeft();
+  }
+  else { 
+    turnRight(k); 
+    k.move(); 
+    turnRight(k);
+  }
+}
+
+function fixSquare(k) {
+   if (k.beepersPresent()) { return; }
+   else if (k.cornerColorIs("Red")) { 
+     for (let i=0;i<4;i++) { 
+       k.putBeeper(); 
+       } 
+     }
+   else if (k.cornerColorIs("Green")) { 
+     for (let i=0;i<2;i++) { 
+       k.putBeeper(); 
+       } 
+     } 
+   else if (k.cornerColorIs("Blue")) {  
+     k.putBeeper(); 
+     }
+}
+function paintFloor(k) {
+  for (let i=0;i<5;i++) {
+    fixSquare(k);
+    k.move()
+  }
+  fixSquare(k)
+}
+
+function main(k) {
+  for (let i=0;i<3;i++) {
+    paintFloor(k);
+    rotate(k)
+  }
+  paintFloor(k)
+ }
+  return main;
+}
