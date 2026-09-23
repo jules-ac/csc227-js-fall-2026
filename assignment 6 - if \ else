@@ -11,21 +11,18 @@ function problem_1() {
 function turnRight(k) {
  k.turnLeft();
  k.turnLeft();
- k.turnLeft() 
+ k.turnLeft();
 }
-function putOrPick(k) {
-  if (k.beepersPresent()) { k.pickBeeper() }
-  else { k.putBeeper() } 
-}
-function traverse(k) {
+function walkThenDecide(k) {
   k.move();
   k.move();
-  putOrPick(k)
+  if (k.beepersPresent()) { k.pickBeeper(); }
+  else { k.putBeeper(); } 
 }
 function main(k) {
-  traverse(k);
+  walkThenDecide(k);
   turnRight(k);
-  traverse(k)
+  walkThenDecide(k);
 }
   return main;
 }
@@ -39,7 +36,7 @@ function main(k) {
     if (k.frontIsClear()) {
      k.move();
      k.putBeeper(); 
-    } else { k.turnLeft() }
+    } else { k.turnLeft(); }
   }
 }
   return main;
@@ -54,35 +51,34 @@ function turnRight(k) {
  k.turnLeft();
  k.turnLeft();
 }
-function recolor(k) {
-  if (k.noBeepersPresent()) { k.paintCorner("Red") } else { k.paintCorner("Blue") }
+function recolorTile(k) {
+  if (k.noBeepersPresent()) { k.paintCorner("Red"); } else { k.paintCorner("Blue"); }
 }
-function rotate(k) {
+function rotateAndAscend(k) {
     if (k.facingEast()) {
     k.turnLeft();
     k.move();
-    k.turnLeft()
+    k.turnLeft();
   } else {
     turnRight(k);
     k.move();
-    turnRight(k) 
+    turnRight(k); 
   } 
-  recolor(k);
 }
-function paintSquare(k) {
-  k.move();
-  recolor(k);
-}
-function paintFloor(k) {
-  for (let e=0;e<4;e++) { paintSquare(k); }
+function recolorFullFloor(k) {
+  for (let e=0;e<4;e++) { 
+    k.move();
+    recolorTile(k); 
+    }
 }
 function main(k) {
-  recolor(k);
+  recolorTile(k);
   for (let i=0;i<3;i++) {
-   paintFloor(k)
-   rotate(k);
+   recolorFullFloor(k);
+   rotateAndAscend(k);
+   recolorTile(k);
    }
-  paintFloor(k)
+  recolorFullFloor(k);
 }
   return main;
 }
@@ -94,7 +90,7 @@ function problem_4() {
 function turnRight(k) {
   k.turnLeft();
   k.turnLeft();
-  k.turnLeft()
+  k.turnLeft();
 }
 
 function rotate(k) {
@@ -110,7 +106,7 @@ function rotate(k) {
   }
 }
 
-function fixSquare(k) {
+function recolorTile(k) {
    if (k.beepersPresent()) { return; }
    else if (k.cornerColorIs("Red")) { 
      for (let i=0;i<4;i++) { 
@@ -126,20 +122,20 @@ function fixSquare(k) {
      k.putBeeper(); 
      }
 }
-function paintFloor(k) {
+function recolorFullFloor(k) {
   for (let i=0;i<5;i++) {
-    fixSquare(k);
-    k.move()
+    recolorTile(k);
+    k.move();
   }
-  fixSquare(k)
+  recolorTile(k);
 }
 
 function main(k) {
   for (let i=0;i<3;i++) {
-    paintFloor(k);
-    rotate(k)
+    recolorFullFloor(k);
+    rotate(k);
   }
-  paintFloor(k)
+  recolorFullFloor(k);
  }
   return main;
 }
