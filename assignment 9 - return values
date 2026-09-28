@@ -1,0 +1,179 @@
+// Karel submission — do not remove the header or the function wrappers.
+// assignment: lesson-09
+//
+// Each problem below is wrapped in an outer function that returns its
+// main(k), so your instructor's grader can run and grade every one.
+
+// ──────────────────────────────────────────────────────────
+// Problem 1: simple (Simple)
+// ──────────────────────────────────────────────────────────
+function problem_1() {
+function isTreasure(k) {
+  if (k.cornerColorIs("Blue") && k.beepersPresent()) { return true; }
+  else { return false; }
+}
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
+}
+function walkAndCheckUntilWall(k) {
+ while (k.frontIsClear()) {
+  if (isTreasure(k)) { k.pickBeeper(); }
+  k.move();
+ }
+ if (isTreasure(k)) { k.pickBeeper(); }
+}
+function rotateAndAscend(k) {
+ if (k.facingEast()) {
+  k.turnLeft();
+  k.move();
+  k.turnLeft(); 
+ } else if (k.facingWest()) {
+  turnRight(k);
+  k.move();
+  turnRight(k);
+ }
+}
+function main(k) {
+  for (let i=0;i<7;i++) {
+   walkAndCheckUntilWall(k);
+   rotateAndAscend(k);
+  }
+  walkAndCheckUntilWall(k);
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 2: moderate (Moderate)
+// ──────────────────────────────────────────────────────────
+function problem_2() {
+function countGreen(k, rows) {
+  let count = 0;
+  for (let i=0;i<rows;i++) {
+   while (k.frontIsClear()) {
+    if (k.cornerColorIs("Green")) { count += 1; }
+    k.move();
+   }
+   if (k.cornerColorIs("Green")) { count += 1; }
+   if (i!=rows-1) { rotateAndAscend(k); }
+  }
+  return count;
+}
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
+}
+function rotateAndAscend(k) {
+ if (k.facingEast()) {
+  k.turnLeft();
+  k.move();
+  k.turnLeft(); 
+ } else if (k.facingWest()) {
+  turnRight(k);
+  k.move();
+  turnRight(k);
+ }
+}
+function main(k) {
+  let s = countGreen(k, 3);
+  for (let i=0;i<s;i++) {
+    k.putBeeper();
+  }
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 3: complex (Complex)
+// ──────────────────────────────────────────────────────────
+function problem_3() {
+function beepersInLargerPile(k) {
+  let leftCount = 0;
+  let rightCount = 0;
+  while (k.beepersPresent()) {
+   k.pickBeeper();
+   leftCount += 1; 
+  }
+  k.move();
+  while (k.beepersPresent()) {
+   k.pickBeeper();
+   rightCount += 1; 
+  }
+  turnAround(k);
+  k.move();
+  turnAround(k);
+  if (rightCount<leftCount) { return "left"; }
+  else if (rightCount>leftCount) { return "right"; }
+}
+
+function markWinner(k, winner) {
+  if (winner == "left") {
+    k.paintCorner("Red");
+  }
+  else if (winner == "right") {
+    k.move();
+    k.paintCorner("Red");
+  }
+
+}
+
+function turnRight(k) {
+  k.turnLeft();
+  k.turnLeft();
+  k.turnLeft();
+}
+
+function turnAround(k) {
+  k.turnLeft();
+  k.turnLeft();
+}
+
+function main(k) {
+  k.move();
+  markWinner(k, beepersInLargerPile(k));
+
+  for (let i = 0; i < 3; i++) k.move();
+  k.turnLeft();
+  k.move();
+  k.move();
+  turnRight(k);
+  markWinner(k, beepersInLargerPile(k));
+
+  k.turnLeft();
+  k.move();
+  k.move();
+  k.turnLeft();
+  for (let i = 0; i < 4; i++) k.move();
+  turnRight(k);
+  turnRight(k);
+  markWinner(k, beepersInLargerPile(k));
+
+  k.turnLeft();
+  k.move();
+  k.move();
+  turnRight(k);
+  for (let i = 0; i < 5; i++) k.move();
+  markWinner(k, beepersInLargerPile(k));
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 4: complex2 (Complex II)
+// ──────────────────────────────────────────────────────────
+function problem_4() {
+function isMarked(k) {
+  
+}
+
+function collectMarked(k) {
+  let count = 0;
+  
+  return count;
+}
+
+function main(k) {
+  let total = 0;
+  
+}
+  return main;
+}
