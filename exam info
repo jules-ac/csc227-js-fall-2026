@@ -1,0 +1,15 @@
+utility functions to create:
+turnRight(k)
+turnAround(k)
+
+turn{North/East/South/West}(k)    <-- check k.{not}facing{Direction} condition: " while (k.{not}facing{Direction}()) "
+note: use k.leftIs{Clear/Blocked}(), k.rightIs{Clear/Blocked}() and k.frontIs{Clear/Blocked}() to make decisions
+note: use k.paintCorner("") to remove paint from tile
+
+k.{no}beepersPresent()
+k.{no}beepersInBag()
+k.cornerColorIs()
+
+doesnt really matter if you change the function name with "not" or negate the result of the function using !
+
+rotateAndAscend(k) ?
