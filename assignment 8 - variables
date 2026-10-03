@@ -13,7 +13,7 @@ function main(k) {
   while (k.frontIsClear()) {
    k.putBeeper();
    k.move();
-   count += 1;
+   count++;
   }
   k.turnLeft();
   k.putBeeper();
@@ -30,53 +30,43 @@ function main(k) {
 // ──────────────────────────────────────────────────────────
 function problem_2() {
 function turnRight(k) {
- for (let i=0;i<3;i++) {
-  k.turnLeft(); 
- } 
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
 }
 function turnAround(k) {
- for (let i=0;i<2;i++) {
   k.turnLeft();
- } 
+  k.turnLeft();
 }
-function gatherBeepersFromRow(k) {
-  let rowBeeperCount = 0;
+function gatherRowBeepers(k) {
+  let beepers = 0;
   while (k.frontIsClear()) {
     while (k.beepersPresent()) {
        k.pickBeeper();
-       rowBeeperCount += 1;
+       beepers++;
     }
    k.move(); 
   }
   while (k.beepersPresent()) {
     k.pickBeeper();
-    rowBeeperCount += 1;
+    beepers++;
   }
-  return rowBeeperCount;
+  return beepers;
 }
-function resetLeftAndDropBeepers(k, beeperCount) {
+function resetLeftAndDropBeepers(k, beepers) {
   turnAround(k);
-  while (k.frontIsClear()) {
-   k.move(); 
-  }
-  for (let i=0;i<beeperCount;i++) {
-   k.putBeeper(); 
-  }
+  while (k.frontIsClear()) { k.move(); }
+  for (let i=0;i<beepers;i++) { k.putBeeper(); }
 }
 function main(k) {
   while (k.frontIsClear()) {
-    let rowBeeperCount = gatherBeepersFromRow(k);
-    resetLeftAndDropBeepers(k, rowBeeperCount);
+    let rowBeepers = gatherRowBeepers(k);
+    resetLeftAndDropBeepers(k, rowBeepers);
     turnRight(k);
+    if (!k.frontIsClear()) { return; }
     k.move();
     turnRight(k);
-    if (!k.frontIsClear()) {
-     return;
     }
     k.move();
   }
-
-}
   return main;
 }
 
@@ -84,8 +74,45 @@ function main(k) {
 // Problem 3: complex (Complex)
 // ──────────────────────────────────────────────────────────
 function problem_3() {
-function main(k) {
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); }
+}
+function turnAround(k) {
+ k.turnLeft();
+ k.turnLeft();
+}
+function commonRowColor(k) {
+  let redCount = 0;
+  let greenCount = 0;
+  while (k.frontIsClear()) {
+    if (k.cornerColorIs("Red")) { redCount += 1; }
+    else if (k.cornerColorIs("Green")) { greenCount += 1; }
+    k.move();
+  }
+  if (k.cornerColorIs("Red")) { redCount += 1; }
+  else if (k.cornerColorIs("Green")) { greenCount += 1; }
   
+  if (redCount > greenCount) { return "Red"; }
+  else if (greenCount > redCount) { return "Green"; }
+  else if (greenCount == redCount) { return "Yellow"; }
+}
+function recolorRow(k, color) {
+  while (k.frontIsClear()) {
+   if (k.cornerColorIs("")) { k.paintCorner(color); }
+   k.move();
+  }
+  if (k.cornerColorIs("")) { k.paintCorner(color); }
+}
+function main(k) {
+  while (k.frontIsClear()) {
+    let rowColor = commonRowColor(k);
+    turnAround(k);
+    recolorRow(k, rowColor);
+    turnRight(k);
+    if (!k.frontIsClear()) { return; }
+    k.move();
+    turnRight(k);
+  }
 }
   return main;
 }
@@ -94,8 +121,77 @@ function main(k) {
 // Problem 4: hard (Hard)
 // ──────────────────────────────────────────────────────────
 function problem_4() {
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); }
+}
+function turnAround(k) {
+ k.turnLeft();
+ k.turnLeft();
+}
+
+function inspectRow(k) {
+  let beepers = 0;
+  while (k.frontIsClear()) {
+    if (k.beepersPresent()) { beepers++; }
+    k.move();
+  }
+  if (k.beepersPresent()) { beepers++; }
+  return beepers;
+}
+
+function resetLeft(k) {
+ turnAround(k);
+ while (k.frontIsClear()) { k.move(); }
+}
+
+function navigateToRow(k, currRow, objRow) {
+  while (currRow != objRow) {
+   k.move();
+   currRow--;
+  }
+}
+
+function cleanWinningRow(k) {
+  let beepers = 0;
+  k.turnLeft();
+  while (k.frontIsClear()) {
+    if (k.beepersPresent()) {
+      k.pickBeeper();
+      beepers++;
+    }
+    k.move();
+  }
+  if (k.beepersPresent()) {
+   k.pickBeeper();
+   beepers++;
+  }
+  turnAround(k);
+  while (k.frontIsClear()) { k.move(); }
+  for (let i=0;i<beepers;i++) { k.putBeeper(); }
+}
+
 function main(k) {
-  
+  let currentRowBeepers = 0;
+  let maxRowBeepers = 0;
+  let currentRow = 0;
+  let winningRow = 0;
+  while (k.frontIsClear()) {
+    currentRow++;
+    currentRowBeepers = inspectRow(k);
+    if (currentRowBeepers > maxRowBeepers) {
+      maxRowBeepers = currentRowBeepers;
+      winningRow = currentRow;
+    }
+    resetLeft(k);
+    turnRight(k);
+    if (k.frontIsClear()) {
+      k.move();
+      turnRight(k); 
+     }
+  }
+  turnAround(k);
+  navigateToRow(k, currentRow, winningRow);
+  cleanWinningRow(k);
 }
   return main;
 }
