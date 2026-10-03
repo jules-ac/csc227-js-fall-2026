@@ -9,6 +9,225 @@
 // ──────────────────────────────────────────────────────────
 function problem_1() {
 function isTreasure(k) {
+  return (k.cornerColorIs("Blue") && k.beepersPresent());
+}
+
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
+}
+
+function checkRow(k) {
+ while (k.frontIsClear()) {
+  if (isTreasure(k)) { k.pickBeeper(); }
+  k.move();
+ }
+ if (isTreasure(k)) { k.pickBeeper(); }
+}
+
+function ascend(k) {
+ if (k.facingEast()) {
+  k.turnLeft();
+  k.move();
+  k.turnLeft(); 
+ } else if (k.facingWest()) {
+  turnRight(k);
+  k.move();
+  turnRight(k);
+ }
+}
+
+function main(k) {
+  for (let i=0;i<7;i++) {
+   checkRow(k);
+   ascend(k);
+  }
+  checkRow(k);
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 2: moderate (Moderate)
+// ──────────────────────────────────────────────────────────
+function problem_2() {
+function countGreen(k, rows) {
+  let count = 0;
+  for (let i=0;i<rows;i++) {
+   while (k.frontIsClear()) {
+    if (k.cornerColorIs("Green")) { count++; }
+    k.move();
+   }
+   if (k.cornerColorIs("Green")) { count++; }
+   if (i!=rows-1) { ascend(k); }
+  }
+  return count;
+}
+
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
+}
+
+function ascend(k) {
+ if (k.facingEast()) {
+  k.turnLeft();
+  k.move();
+  k.turnLeft(); 
+ } else if (k.facingWest()) {
+  turnRight(k);
+  k.move();
+  turnRight(k);
+ }
+}
+
+function main(k) {
+  let s = countGreen(k, 3);
+  for (let i=0;i<s;i++) { k.putBeeper(); }
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 3: complex (Complex)
+// ──────────────────────────────────────────────────────────
+function problem_3() {
+function beepersInLargerPile(k) {
+  let left = 0;
+  let right = 0;
+  while (k.beepersPresent()) {
+    k.pickBeeper();
+    left++;
+  }
+  k.move();
+  while (k.beepersPresent()) {
+   k.pickBeeper();
+   right++; 
+  }
+  turnAround(k);
+  k.move();
+  turnAround(k);
+  if (left>right) { return "left"; }
+  else if (right>left) { return "right"; } 
+}
+
+function markWinner(k, winner) {
+  if (winner == "left") { k.paintCorner("Red"); }
+  else if (winner == "right") {
+    k.move();
+    k.paintCorner("Red");
+    turnAround(k);
+    k.move();
+    turnAround(k);
+  }
+}
+
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
+}
+
+function turnAround(k) {
+  k.turnLeft();
+  k.turnLeft();
+}
+
+function main(k) {
+  k.move();
+  markWinner(k, beepersInLargerPile(k));
+
+  for (let i = 0; i < 3; i++) k.move();
+  k.turnLeft();
+  k.move();
+  k.move();
+  turnRight(k);
+  markWinner(k, beepersInLargerPile(k));
+
+  k.turnLeft();
+  k.move();
+  k.move();
+  k.turnLeft();
+  for (let i = 0; i < 4; i++) k.move();
+  turnRight(k);
+  turnRight(k);
+  markWinner(k, beepersInLargerPile(k));
+
+  k.turnLeft();
+  k.move();
+  k.move();
+  turnRight(k);
+  for (let i = 0; i < 5; i++) k.move();
+  markWinner(k, beepersInLargerPile(k));
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 4: complex2 (Complex II)
+// ──────────────────────────────────────────────────────────
+function problem_4() {
+function isMarked(k) {
+  return (k.beepersPresent() & k.cornerColorIs("Orange"));
+}
+
+function collectMarked(k) {
+  let count = 0;
+  while (k.frontIsClear()) {
+   if (isMarked(k)) {
+     k.pickBeeper();
+     count++;
+    }
+   k.move();
+  }
+  if (isMarked(k)) {
+    k.pickBeeper();
+    count++;
+   }
+  return count;
+}
+
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
+}
+function turnAround(k) {
+  k.turnLeft();
+  k.turnLeft();
+}
+
+function ascend(k) {
+ if (k.rightIsBlocked()) {
+  k.move();
+  k.turnLeft();
+ } 
+ else if (k.leftIsBlocked()) {
+  k.move();
+  turnRight(k);
+ } 
+}
+
+function main(k) {
+  let total = 0;
+  let iteration = 0;
+  while (k.frontIsClear()) {
+   total += collectMarked(k);
+   iteration++;
+   if (iteration%2==0) { turnRight(k); }
+   else { k.turnLeft(); }
+   if (k.frontIsClear()) { ascend(k); }
+  }
+  k.turnLeft();
+  for (let i=0;i<total;i++) { k.putBeeper(); }
+}
+  return main;
+}
+// Karel submission — do not remove the header or the function wrappers.
+// assignment: lesson-09
+//
+// Each problem below is wrapped in an outer function that returns its
+// main(k), so your instructor's grader can run and grade every one.
+
+// ──────────────────────────────────────────────────────────
+// Problem 1: simple (Simple)
+// ──────────────────────────────────────────────────────────
+function problem_1() {
+function isTreasure(k) {
   if (k.cornerColorIs("Blue") && k.beepersPresent()) { return true; }
   else { return false; }
 }
