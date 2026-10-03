@@ -36,6 +36,7 @@ function turnAround(k) {
   k.turnLeft();
   k.turnLeft();
 }
+
 function gatherRowBeepers(k) {
   let beepers = 0;
   while (k.frontIsClear()) {
@@ -51,11 +52,13 @@ function gatherRowBeepers(k) {
   }
   return beepers;
 }
+
 function resetLeftAndDropBeepers(k, beepers) {
   turnAround(k);
   while (k.frontIsClear()) { k.move(); }
   for (let i=0;i<beepers;i++) { k.putBeeper(); }
 }
+
 function main(k) {
   while (k.frontIsClear()) {
     let rowBeepers = gatherRowBeepers(k);
@@ -77,10 +80,12 @@ function problem_3() {
 function turnRight(k) {
  for (let i=0;i<3;i++) { k.turnLeft(); }
 }
+
 function turnAround(k) {
  k.turnLeft();
  k.turnLeft();
 }
+
 function commonRowColor(k) {
   let redCount = 0;
   let greenCount = 0;
@@ -96,6 +101,7 @@ function commonRowColor(k) {
   else if (greenCount > redCount) { return "Green"; }
   else if (greenCount == redCount) { return "Yellow"; }
 }
+
 function recolorRow(k, color) {
   while (k.frontIsClear()) {
    if (k.cornerColorIs("")) { k.paintCorner(color); }
@@ -103,6 +109,7 @@ function recolorRow(k, color) {
   }
   if (k.cornerColorIs("")) { k.paintCorner(color); }
 }
+
 function main(k) {
   while (k.frontIsClear()) {
     let rowColor = commonRowColor(k);
@@ -124,6 +131,7 @@ function problem_4() {
 function turnRight(k) {
  for (let i=0;i<3;i++) { k.turnLeft(); }
 }
+
 function turnAround(k) {
  k.turnLeft();
  k.turnLeft();
