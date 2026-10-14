@@ -1,0 +1,129 @@
+// Karel submission — do not remove the header or the function wrappers.
+// assignment: lesson-12
+//
+// Each problem below is wrapped in an outer function that returns its
+// main(k), so your instructor's grader can run and grade every one.
+
+// ──────────────────────────────────────────────────────────
+// Problem 1: simple (Simple)
+// ──────────────────────────────────────────────────────────
+function problem_1() {
+function main(k) {
+  let first = "Kar";
+  let second = "el";
+  let kWord = first+second;
+  for (let i=0;i<kWord.length;i++) {
+    k.putBeeper();
+    k.move(); 
+  }
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 2: moderate (Moderate)
+// ──────────────────────────────────────────────────────────
+function problem_2() {
+function main(k) {
+  let word = "beeper";
+  let eCount = 0;
+  for (let i=0;i<word.length;i++) {
+   if (word[i]==="e") { eCount++; }
+ }
+ for (let i=0;i<eCount;i++) { k.putBeeper(); }
+ for (let i=0;i<word.indexOf("p");i++) { k.move(); }
+ k.putBeeper();
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 3: complex (Complex)
+// ──────────────────────────────────────────────────────────
+function problem_3() {
+function interpretCmdPair(k, pair) {
+  let cmd = pair[0].toLowerCase();
+  let ct = pair[1];
+  if (cmd=="m") {
+   for (let i=0;i<ct;i++) { k.move(); } 
+  }
+  else if (cmd=="l") {
+   for (let i=0;i<ct;i++) { k.turnLeft(); }
+  }
+}
+
+function main(k) {
+  let cmds = "m4l1M3L1m2";
+  for (let i=0;i<cmds.length;i+=2) {
+    let pair = cmds.slice(i,i+2);
+    interpretCmdPair(k, pair);
+  }
+}
+
+// why does updating the loop with i++ and i+=2 result in the same thing???
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 4: complex2 (Complex II)
+// ──────────────────────────────────────────────────────────
+function problem_4() {
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
+}
+
+function paintByCode(k, code) {
+ if (code.toLowerCase() === "r") { k.paintCorner("Red"); }
+ else if (code.toLowerCase === "g") { k.paintCorner("Green"); }
+ else if (code.toLowerCase === "b") { k.paintCorner("Blue"); }
+ else if (code.toLowerCase === "c") { k.paintCorner("Cyan"); }
+ else if (code.toLowerCase === "y") { k.paintCorner("Yellow"); }
+}
+
+
+function main(k) {
+  let plan = "RGBYC";
+  let revPlan = "";
+  for (let i=plan.length;i>0;i--) { revPlan += plan[i]; }
+  let rotPlan = plan.slice(1) + plan[0];
+
+  while (k.frontIsClear()) {
+    for (let i=0;i<plan.length;i++) {
+      paintByCode(k, plan[i]);
+      k.move();
+    }
+    paintByCode(k, plan[-1]);
+  }
+  k.turnLeft();
+  k.turnLeft();
+  while (k.frontIsClear()) { k.move(); }
+  turnRight(k);
+  k.move();
+  turnRight(k);
+  
+  while (k.frontIsClear()) {
+   for (let i=plan.length;i>=0;i--) {
+    paintByCode(k, plan[i]);
+    k.move();
+   } 
+   paintByCode(k, plan[0]);
+  }
+  
+   k.turnLeft();
+  k.turnLeft();
+  while (k.frontIsClear()) { k.move(); }
+  turnRight(k);
+  k.move();
+  turnRight(k);
+  
+  while (k.frontIsClear()) {
+   for (let i=0;i<plan.length;i++) {
+    paintByCode(k, rotPlan[i]);
+    k.move();
+   } 
+   paintByCode(k, rotPlan[-1]);
+  }
+  
+}
+  return main;
+}
