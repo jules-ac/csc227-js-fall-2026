@@ -54,13 +54,11 @@ function interpretCmdPair(k, pair) {
 
 function main(k) {
   let cmds = "m4l1M3L1m2";
-  for (let i=0;i<cmds.length;i+=2) {
+  for (let i=0;i<cmds.length;i++) {
     let pair = cmds.slice(i,i+2);
     interpretCmdPair(k, pair);
   }
 }
-
-// why does updating the loop with i++ and i+=2 result in the same thing???
   return main;
 }
 
@@ -73,57 +71,47 @@ function turnRight(k) {
 }
 
 function paintByCode(k, code) {
- if (code.toLowerCase() === "r") { k.paintCorner("Red"); }
- else if (code.toLowerCase === "g") { k.paintCorner("Green"); }
- else if (code.toLowerCase === "b") { k.paintCorner("Blue"); }
- else if (code.toLowerCase === "c") { k.paintCorner("Cyan"); }
- else if (code.toLowerCase === "y") { k.paintCorner("Yellow"); }
+// using toLowerCase property on code produced this error - "Karel stopped early: can't access property "toLowerCase", code is undefined".
+// which is weird because, it still did what it was supposed to do. it converted code to lowercase and the code ran correctly, but it still
+// showed that error. so i handled this more primitively
+ if (code === "r" || code === "R") { k.paintCorner("Red"); }
+ else if (code === "g" || code === "G") { k.paintCorner("Green"); }
+ else if (code === "b" || code === "B") { k.paintCorner("Blue"); }
+ else if (code === "c" || code === "C") { k.paintCorner("Cyan"); }
+ else if (code === "y" || code === "Y") { k.paintCorner("Yellow"); }
 }
 
+function slideLeft(k) {
+  k.turnLeft();
+  k.turnLeft();
+  while (k.frontIsClear()) { k.move(); }
+  turnRight(k);
+  k.move();
+  turnRight(k);
+}
 
 function main(k) {
   let plan = "RGBYC";
-  let revPlan = "";
-  for (let i=plan.length;i>0;i--) { revPlan += plan[i]; }
-  let rotPlan = plan.slice(1) + plan[0];
 
-  while (k.frontIsClear()) {
-    for (let i=0;i<plan.length;i++) {
-      paintByCode(k, plan[i]);
-      k.move();
-    }
-    paintByCode(k, plan[-1]);
-  }
-  k.turnLeft();
-  k.turnLeft();
-  while (k.frontIsClear()) { k.move(); }
-  turnRight(k);
-  k.move();
-  turnRight(k);
-  
-  while (k.frontIsClear()) {
-   for (let i=plan.length;i>=0;i--) {
+  for (let i=0;i<plan.length;i++) {
     paintByCode(k, plan[i]);
-    k.move();
-   } 
-   paintByCode(k, plan[0]);
+    if (k.frontIsClear()) { k.move(); }  
+  }
+
+  slideLeft(k);
+
+  for (let i=plan.length-1;i>=0;i--) {
+    paintByCode(k, plan[i]);
+    if (k.frontIsClear()) { k.move(); }
   }
   
-   k.turnLeft();
-  k.turnLeft();
-  while (k.frontIsClear()) { k.move(); }
-  turnRight(k);
-  k.move();
-  turnRight(k);
+  slideLeft(k);
   
-  while (k.frontIsClear()) {
-   for (let i=0;i<plan.length;i++) {
-    paintByCode(k, rotPlan[i]);
-    k.move();
-   } 
-   paintByCode(k, rotPlan[-1]);
+  for (let i=1;i<plan.length;i++) {
+   paintByCode(k, plan[i]);
+   if (k.frontIsClear()) { k.move(); }
   }
-  
+  paintByCode(k, plan[0]);
 }
   return main;
 }
