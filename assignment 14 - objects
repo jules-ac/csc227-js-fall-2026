@@ -1,0 +1,179 @@
+// Karel submission — do not remove the header or the function wrappers.
+// assignment: lesson-14
+//
+// Each problem below is wrapped in an outer function that returns its
+// main(k), so your instructor's grader can run and grade every one.
+
+// ──────────────────────────────────────────────────────────
+// Problem 1: simple (Simple)
+// ──────────────────────────────────────────────────────────
+function problem_1() {
+function moveToAve(k, ave) {
+ for (let i=1;i<ave;i++) { k.move(); } 
+}
+
+function colorTiles(k, tiles, color) {
+ for (let i=0;i<tiles;i++) {
+   k.paintCorner(color);
+   if (i!=tiles-1) { k.move(); }
+ }
+}
+
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
+}
+
+function turnAround(k) {
+ k.turnLeft();
+ k.turnLeft(); 
+}
+
+function resetToLeft(k) {
+  turnAround(k);
+  while (k.frontIsClear()) { k.move(); }
+  turnRight(k);
+  while (k.frontIsClear()) { k.move(); }
+  turnAround(k);
+}
+
+function main(k) {
+  
+  let flags = [
+    { avenue: 1, height: 2, color: "Red" },
+    { avenue: 3, height: 4, color: "Blue" },
+    { avenue: 4, height: 1, color: "Yellow" },
+    { avenue: 6, height: 3, color: "Green" },
+  ];
+  
+  for (let i=0;i<flags.length;i++) {
+    moveToAve(k, flags[i].avenue);
+    k.turnLeft();
+    colorTiles(k, flags[i].height, flags[i].color);
+    resetToLeft(k);
+  }
+  
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 2: moderate (Moderate)
+// ──────────────────────────────────────────────────────────
+function problem_2() {
+function turnRight(k) {
+ for (let i=0;i<3;i++) { k.turnLeft(); } 
+}
+
+function turnAround(k) {
+ k.turnLeft();
+ k.turnLeft(); 
+}
+
+function resetToLeft(k) {
+ turnAround(k);
+ while (k.frontIsClear()) { k.move(); }
+ turnRight(k);
+ if (k.frontIsClear()) {
+   k.move();
+   turnRight(k);
+ }
+}
+
+function main(k) {
+  let best = { street: 0, total: -1 };
+  let rowCt = 0;
+
+for (let row=1;row<=5;row++) {
+ rowCt = 0;
+ for (let col=1;col<=5;col++) {
+  replaceCt = 0;
+  while (k.beepersPresent()) {
+    k.pickBeeper();
+    rowCt++;
+    replaceCt++;
+  }
+  for (let i=0;i<replaceCt;i++) { k.putBeeper(); }
+  if (k.frontIsClear()) { k.move(); }
+ }
+ if (rowCt > best.total) {
+  best.total = rowCt;
+  best.street = row; 
+ }
+ resetToLeft(k);
+}
+ turnAround(k);
+ for (let i=5;i>best.street;i--) { k.move(); }
+ k.turnLeft();
+ while (k.frontIsClear()) {
+   k.paintCorner("Yellow");
+   k.move();
+ }
+ k.paintCorner("Yellow");
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 3: complex (Complex)
+// ──────────────────────────────────────────────────────────
+function problem_3() {
+function main(k) {
+  let pos = {row:1,col:1};
+  let rectangle = {west:99,east:99,south:99,north:99};
+  
+  for (let row=1;row<=6;row++) {
+   
+   for (let col=1;col<=6;col++) {
+     
+    if (k.beepersPresent()) {
+      
+      if (rectangle.south>row) { rectangle.south = row; }
+      if (rectangle.west>row) { rectangle.west = row; }
+    
+    }
+    if (k.frontIsClear()) { k.move(); }
+     
+     
+   } 
+    
+  }
+  
+}
+  return main;
+}
+
+// ──────────────────────────────────────────────────────────
+// Problem 4: complex2 (Complex II)
+// ──────────────────────────────────────────────────────────
+function problem_4() {
+// Return the name of this corner's color.
+function readColor(k) {
+  let candidates = ["Red", "Orange", "Yellow", "Green", "Blue", "Cyan", "Magenta", "Pink"];
+  for (let i = 0; i < candidates.length; i++) {
+    if (k.cornerColorIs(candidates[i])) {
+      return candidates[i];
+    }
+  }
+  return "";
+}
+
+// Pick up the whole pile on this corner and return its size.
+function takePile(k) {
+  let n = 0;
+  while (k.beepersPresent()) {
+    k.pickBeeper();
+    n++;
+  }
+  return n;
+}
+
+function turnAround(k) {
+  k.turnLeft();
+  k.turnLeft();
+}
+
+function main(k) {
+  
+}
+  return main;
+}
