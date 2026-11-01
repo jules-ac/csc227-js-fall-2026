@@ -126,34 +126,81 @@ function turnAround(k) {
  k.turnLeft(); 
 }
 
+function paintConditional(k, pos, rect) {
+  if ( (( pos.row === rect.south || pos.row === rect.north ) && (pos.col >= rect.west && pos.col <= rect.east)) ||
+  (( pos.col === rect.west || pos.col === rect.east ) && (pos.row >= rect.south && pos.row <= rect.north)) ) { k.paintCorner("Yellow"); }
+}
+
 function main(k) {
-  let rect = { west:1, east:2, south:1, north:2 };
+  
+  let rect = {
+    north: undefined,
+    east: undefined,
+    south: undefined,
+    west: undefined
+  }
+  
   let pos = { row:1, col:1 }
   
   while (k.frontIsClear()) {
-   
    while (k.frontIsClear()) {
      
     if (k.beepersPresent()) {
-     if (pos.col<rect.east) { rect.west=pos.col; }
-     else { rect.east=pos.col; }
+      if (rect.north===undefined) {
+        rect.north=pos.row;
+        rect.south=pos.row;
+        rect.east=pos.col;
+        rect.west=pos.col;
+      }
+      else {
+      if (pos.col>rect.east) { rect.east = pos.col; }
+      if (pos.col<rect.west) { rect.west = pos.col; }
+      if (pos.row>rect.north) { rect.north = pos.row; }
+      if (pos.row<rect.south) { rect.south = pos.row; }
+     }
     }
     if (k.frontIsClear()) {
       k.move();
       pos.col++;
      }
-     
    } 
     turnAround(k);
     while (k.frontIsClear()) { k.move(); }
+    pos.col = 1;
     turnRight(k);
     if (k.frontIsClear()) {
      k.move();
-     turnRight(k); 
+     turnRight(k);
+     pos.row++; 
     }
-    
   }
   
+  turnAround(k);
+  while (k.frontIsClear()) { k.move(); }
+  k.turnLeft();
+  
+  pos.row = 1;
+  pos.col = 1;
+  
+  while (k.frontIsClear()) {
+   while (k.frontIsClear()) {
+    paintConditional(k, pos, rect);
+    if (k.frontIsClear()) {
+      k.move();
+      pos.col++;
+     } 
+   } 
+    paintConditional(k, pos, rect);
+    turnAround(k);
+    while (k.frontIsClear()) { k.move(); }
+    pos.col = 1;
+    turnRight(k);
+    if (k.frontIsClear()) {
+      k.move();
+      turnRight(k);
+      pos.row++;
+    }
+  }
 }
   return main;
 }
@@ -188,7 +235,51 @@ function turnAround(k) {
   k.turnLeft();
 }
 
+function selectionSort(k, origArr) {
+ let newArr = [];
+ 
+ while (origArr.length>0) {
+  let minSize = origArr[0].size;
+  let minColor = origArr[0].color;
+  let minIndex = 0;
+  for (let i=1;i<origArr.length;i++) {
+    if (origArr[i].size<minSize) {
+      minSize = origArr[i].size;
+      minColor = origArr[i].color;
+      minIndex = i;
+    } 
+  }
+  origArr.splice(minIndex, 1);
+  let minCorner = { size: minSize, color: minColor }
+  newArr.push(minCorner);
+ }
+ return newArr;
+}
+
 function main(k) {
+  let corners = [];
+  
+  while (k.frontIsClear()) {
+    corner = { color: readColor(k), size: takePile(k) }
+    corners.push(corner);
+    k.move();
+  }
+  corner = { color: readColor(k), size: takePile(k) }
+  corners.push(corner);
+  
+  turnAround(k);
+  while (k.frontIsClear()) {
+    k.move();
+  }
+  turnAround(k);
+  
+  let sortedCorners = selectionSort(k, corners);
+  
+  for (let i=0;i<sortedCorners.length;i++) {
+   k.paintCorner(sortedCorners[i].color);
+   for (let y=0;y<sortedCorners[i].size;y++) { k.putBeeper(); }
+   if (k.frontIsClear()) { k.move(); } 
+  }
   
 }
   return main;
