@@ -1,0 +1,78 @@
+// lab: lab-13
+// title: The DOM I
+// Copied from the lab page. Keep these header lines and the ===== markers.
+
+// ===== problem 1: simple =====
+// Status message (10 pts) — passed in browser
+function setStatus(text, ok) {
+  let status = document.getElementById("status");
+  status.textContent = text;
+  if (ok) {
+    if (status.classList.contains("error")) { status.classList.remove("error"); }
+    status.classList.add("ok");
+  } else {
+    if (status.classList.contains("ok")) { status.classList.remove("ok"); }
+    status.classList.add("error");
+  }
+}
+// ===== end problem 1 =====
+
+// ===== problem 2: moderate =====
+// Highlighter (10 pts) — passed in browser
+function highlight(selector, cls) {
+ 
+ let matched=0;
+ let elements=document.querySelectorAll(selector);
+ 
+ for (const element of elements) {
+   element.classList.add(cls);
+   matched++;
+ }
+ return matched;
+ }
+
+function clearHighlight(cls) {
+  
+  let matched=0;
+  let elements=document.querySelectorAll("."+cls);
+  for (const element of elements) {
+    element.classList.remove(cls);
+    matched++; 
+  }
+  return matched;
+}
+// ===== end problem 2 =====
+
+// ===== problem 3: complex =====
+// Read and validate an order form (10 pts)
+function readOrder() {
+  let orderForm = document.getElementById("order").elements;
+  
+  let toppingsArr = [];
+  for (const topping of orderForm.getElementsByName("topping")) {
+    toppingsArr.push(topping.value);
+  }
+  
+  
+  return {
+   name: orderForm.name.value.trim();
+   size: orderForm.size.value;
+   crust: orderForm.crust.value;
+   toppings: orderForm.querySelectorAll("input[name=topping]:checked");
+   delivery: orderForm.delivery.value;
+   address: orderForm.address.value;
+   errors: [
+    nameErr:
+    toppingErr:
+    addressErr:
+   ]
+  }
+}
+// ===== end problem 3 =====
+
+// ===== problem 4: challenge =====
+// Price table from data attributes (10 pts)
+function updateTotals(taxRate) {
+
+}
+// ===== end problem 4 =====
