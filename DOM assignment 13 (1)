@@ -44,35 +44,72 @@ function clearHighlight(cls) {
 // ===== end problem 2 =====
 
 // ===== problem 3: complex =====
-// Read and validate an order form (10 pts)
+// Read and validate an order form (10 pts) — passed in browser
 function readOrder() {
-  let orderForm = document.getElementById("order").elements;
+  let form = document.querySelector("#order");
+  let elements = form.elements;
+
+  let errorsArr  = [];
   
-  let toppingsArr = [];
-  for (const topping of orderForm.getElementsByName("topping")) {
-    toppingsArr.push(topping.value);
+  let name = elements.name.value.trim();
+  let address = elements.address.value.trim();
+  let size = elements.size.value;
+  let crust = elements.crust.value;
+  let selectedToppings = form.querySelectorAll("input[name='topping']:checked");
+  let toppings = [];
+  for (let i=0;i<selectedToppings.length;i++) { toppings.push(selectedToppings[i].value); }
+  let delivery = elements.delivery.checked;
+  
+  if (!name) { errorsArr.push("name is required"); }
+  if (toppings.length===0) { errorsArr.push("choose at least one topping"); }
+  if (delivery && !address) { errorsArr.push("address is required for delivery"); }
+  
+  let errors = document.getElementById("errors");
+  errors.innerHTML = "";
+  for (const err of errorsArr) {
+   errors.insertAdjacentHTML("beforeend", "<li>"+err+"</li>"); 
   }
-  
   
   return {
-   name: orderForm.name.value.trim();
-   size: orderForm.size.value;
-   crust: orderForm.crust.value;
-   toppings: orderForm.querySelectorAll("input[name=topping]:checked");
-   delivery: orderForm.delivery.value;
-   address: orderForm.address.value;
-   errors: [
-    nameErr:
-    toppingErr:
-    addressErr:
-   ]
-  }
+   name, size, crust, toppings, delivery, address, errors: errorsArr 
+  };
+  
 }
 // ===== end problem 3 =====
 
 // ===== problem 4: challenge =====
-// Price table from data attributes (10 pts)
+// Price table from data attributes (10 pts) — passed in browser
 function updateTotals(taxRate) {
-
+  let metricsLine = document.querySelector("p");
+  let cartBody = document.querySelector("tbody");
+  
+  let displayLines = cartBody.querySelectorAll(".line");
+  let rows = cartBody.querySelectorAll("tr");
+  
+  let subtotal = 0;
+  for (let i=0;i<rows.length;i++) {
+   
+   let lineTotal = Math.round((rows[i].dataset.price * rows[i].dataset.qty)*100)/100;
+   subtotal += lineTotal;
+   
+   displayLines[i].textContent = "$"+lineTotal.toFixed(2);
+   rows[i].dataset.line = lineTotal.toFixed(2);
+   
+   if (lineTotal>=10) { 
+    if (!rows[i].classList.contains("big")) { rows[i].classList.add("big"); }
+   }
+   else {
+      if (rows[i].classList.contains("big")) { rows[i].classList.remove("big"); }
+   }
+  }
+  
+  let tax = Math.round((subtotal*taxRate)*100)/100;
+  let total = Math.round((subtotal+tax)*100)/100;
+  
+  metricsLine.querySelector("#subtotal").textContent = "$"+subtotal.toFixed(2);
+  metricsLine.querySelector("#tax").textContent = "$"+tax.toFixed(2);
+  metricsLine.querySelector("#total").textContent = "$"+total.toFixed(2);
+  
+  return total;
 }
 // ===== end problem 4 =====
