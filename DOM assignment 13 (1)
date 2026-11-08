@@ -5,7 +5,7 @@
 // ===== problem 1: simple =====
 // Status message (10 pts) — passed in browser
 function setStatus(text, ok) {
-  let status = document.getElementById("status");
+  let status = document.querySelector("#status");
   status.textContent = text;
   if (ok) {
     if (status.classList.contains("error")) { status.classList.remove("error"); }
@@ -20,10 +20,8 @@ function setStatus(text, ok) {
 // ===== problem 2: moderate =====
 // Highlighter (10 pts) — passed in browser
 function highlight(selector, cls) {
- 
  let matched=0;
  let elements=document.querySelectorAll(selector);
- 
  for (const element of elements) {
    element.classList.add(cls);
    matched++;
@@ -32,7 +30,6 @@ function highlight(selector, cls) {
  }
 
 function clearHighlight(cls) {
-  
   let matched=0;
   let elements=document.querySelectorAll("."+cls);
   for (const element of elements) {
@@ -49,31 +46,26 @@ function readOrder() {
   let form = document.querySelector("#order");
   let elements = form.elements;
 
-  let errorsArr  = [];
-  
   let name = elements.name.value.trim();
   let address = elements.address.value.trim();
   let size = elements.size.value;
   let crust = elements.crust.value;
-  let selectedToppings = form.querySelectorAll("input[name='topping']:checked");
-  let toppings = [];
-  for (let i=0;i<selectedToppings.length;i++) { toppings.push(selectedToppings[i].value); }
+  let chosenToppings = form.querySelectorAll("input[name='topping']:checked");
   let delivery = elements.delivery.checked;
+
+  let toppings = [];
+  for (const chosenTopping of chosenToppings) { toppings.push(chosenTopping.value); }
   
+  let errorsArr  = [];
   if (!name) { errorsArr.push("name is required"); }
   if (toppings.length===0) { errorsArr.push("choose at least one topping"); }
   if (delivery && !address) { errorsArr.push("address is required for delivery"); }
   
-  let errors = document.getElementById("errors");
+  let errors = document.querySelector("#errors");
   errors.innerHTML = "";
-  for (const err of errorsArr) {
-   errors.insertAdjacentHTML("beforeend", "<li>"+err+"</li>"); 
-  }
+  for (const err of errorsArr) { errors.insertAdjacentHTML("beforeend", "<li>"+err+"</li>"); }
   
-  return {
-   name, size, crust, toppings, delivery, address, errors: errorsArr 
-  };
-  
+  return { name, size, crust, toppings, delivery, address, errors: errorsArr };
 }
 // ===== end problem 3 =====
 
@@ -81,12 +73,13 @@ function readOrder() {
 // Price table from data attributes (10 pts) — passed in browser
 function updateTotals(taxRate) {
   let metricsLine = document.querySelector("p");
-  let cartBody = document.querySelector("tbody");
   
+  let cartBody = document.querySelector("tbody");
   let displayLines = cartBody.querySelectorAll(".line");
   let rows = cartBody.querySelectorAll("tr");
   
   let subtotal = 0;
+  
   for (let i=0;i<rows.length;i++) {
    
    let lineTotal = Math.round((rows[i].dataset.price * rows[i].dataset.qty)*100)/100;
@@ -99,10 +92,10 @@ function updateTotals(taxRate) {
     if (!rows[i].classList.contains("big")) { rows[i].classList.add("big"); }
    }
    else {
-      if (rows[i].classList.contains("big")) { rows[i].classList.remove("big"); }
+    if (rows[i].classList.contains("big")) { rows[i].classList.remove("big"); }
    }
+   
   }
-  
   let tax = Math.round((subtotal*taxRate)*100)/100;
   let total = Math.round((subtotal+tax)*100)/100;
   
