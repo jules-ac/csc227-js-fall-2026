@@ -1,0 +1,25 @@
+// exam: exam-2
+// title: Exam 2 · The DOM
+// Copied from the exam page. Keep these header lines and the ===== markers.
+
+// ===== problem 3: thickestBorder =====
+// Match the thickest border (33 pts) — passed in browser
+// Helper: turns a CSS width like "12px" into the number 12.
+function parseWidth(borderWidth) {
+  return parseFloat(borderWidth);
+}
+// Get references to the five divs, find the one with the thickest border,
+// then give every other div that same border width.
+const divs = document.querySelectorAll("#boxes div");
+let maxWidth = 0;
+let currWidth = 0;
+
+for (let i=0;i<divs.length;i++) {
+ currWidth = parseWidth(divs[i].style.borderWidth);
+ if (currWidth>maxWidth) { maxWidth = currWidth; } 
+}
+
+for (let i=0;i<divs.length;i++) {
+  divs[i].style.borderWidth = maxWidth+"px";
+}
+// ===== end problem 3 =====
