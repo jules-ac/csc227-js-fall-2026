@@ -1,0 +1,89 @@
+// lab: lab-14
+// title: The DOM II
+// Copied from the lab page. Keep these header lines and the ===== markers.
+
+// ===== problem 1: simple =====
+// Add items (10 pts) — passed in browser
+function addItems(listId, items) {
+  let destList = document.querySelector("#"+listId);
+  
+  for (let i=0;i<items.length;i++) {
+   const newListItem = document.createElement("li");
+   destList.append(newListItem);
+   newListItem.textContent = items[i];
+  }
+  return destList.querySelectorAll("li").length;
+}
+// ===== end problem 1 =====
+
+// ===== problem 2: moderate =====
+// Product cards (10 pts) — passed in browser
+function renderCards(products) {
+  let grid = document.querySelector("#grid");
+  grid.innerHTML = "";
+  
+  if (products.length===0) {
+   grid.innerHTML = '<p class="empty">No products</p>';
+   return;
+  }
+  
+  for (let i=0;i<products.length;i++) {
+    let card = document.createElement("div");
+    card.className = "card";
+    let price = document.createElement("p");
+    price.className = "price";
+    let nameHeader = document.createElement("h3");
+    
+    grid.append(card);
+    card.append(nameHeader);
+    card.append(price);
+    
+    nameHeader.textContent = products[i].name;
+    price.textContent = "$"+products[i].price.toFixed(2);
+  }
+}
+// ===== end problem 2 =====
+
+// ===== problem 3: complex =====
+// Table of contents (10 pts) — passed in browser
+function buildToc() {
+  let toc = document.querySelector("#toc");
+  toc.innerHTML = "";
+  
+  let headings = document.querySelectorAll("#article h2, #article h3");
+  let headingsPlaced = 0;
+  let firsth2Passed = false;
+  
+  let currh2Li = null;
+  let currNestedUl = null;
+  let currHeading = null;
+  
+  for (let i=0;i<headings.length;i++) {
+    currHeading = headings[i];
+    
+    if (currHeading.tagName==="H2") {
+     firsth2Passed = true;
+     let li = document.createElement("li");
+     li.textContent = currHeading.textContent;
+     toc.appendChild(li);
+     headingsPlaced++;
+     currh2Li = li;
+     currNestedUl = null;
+     
+    } else if (currHeading.tagName==="H3"&&firsth2Passed) {
+      
+     if (!currNestedUl) {
+      currNestedUl = document.createElement("ul");
+      currh2Li.appendChild(currNestedUl); 
+     }
+     let h3Li = document.createElement("li");
+     h3Li.textContent = currHeading.textContent;
+     currNestedUl.appendChild(h3Li);
+     headingsPlaced++;
+    }
+    
+  }
+  
+return headingsPlaced;
+}
+// ===== end problem 3 =====
